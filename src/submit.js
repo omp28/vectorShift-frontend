@@ -1,26 +1,10 @@
-// submit.js
 import { useStore } from "./store";
 
 export const SubmitButton = () => {
-  const { nodes, edges } = useStore();
+  const { collectData } = useStore();
 
   const handleSubmit = () => {
-    const formattedData = {
-      nodes: nodes.map((node) => ({
-        id: node.id,
-        type: node.type,
-        position: node.position,
-        data: node.data,
-      })),
-      edges: edges.map((edge) => ({
-        id: edge.id,
-        source: edge.source,
-        target: edge.target,
-        sourceHandle: edge.sourceHandle,
-        targetHandle: edge.targetHandle,
-      })),
-    };
-
+    const formattedData = collectData(); // Collect the data using the store's method
     console.log("Data to be sent to the backend:", formattedData);
   };
 
