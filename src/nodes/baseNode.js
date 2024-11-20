@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Handle, Position } from "reactflow";
 
-export const BaseNode = ({ id, data, type, handles = {} }) => {
+export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
+  const [content, setContent] = useState(data.content || "");
+
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+    if (onUpdateContent) {
+      onUpdateContent(id, e.target.value);
+    }
+  };
+
   const { inputs = [], outputs = [] } = handles;
 
   return (
@@ -17,7 +26,18 @@ export const BaseNode = ({ id, data, type, handles = {} }) => {
       <div style={{ marginBottom: "10px", fontWeight: "bold" }}>
         {type} Node
       </div>
-      <div>{data.content || "Custom Content Here"}</div>
+      <textarea
+        value={content}
+        onChange={handleContentChange}
+        placeholder="Enter custom content"
+        style={{
+          width: "100%",
+          resize: "none",
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          padding: "5px",
+        }}
+      />
       {inputs.map((input, index) => (
         <Handle
           key={`${id}-input-${index}`}
