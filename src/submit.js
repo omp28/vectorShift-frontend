@@ -12,7 +12,10 @@ export const SubmitButton = () => {
     console.log("Data to be sent to the backend:", formattedData);
 
     try {
-      const response = await fetch("http://localhost:8000/pipelines/parse", {
+      const apiBaseUrl =
+        process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+
+      const response = await fetch(`${apiBaseUrl}/pipelines/parse`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
