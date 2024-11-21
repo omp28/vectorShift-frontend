@@ -20,10 +20,8 @@ export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
   const handleContentChange = (e) => {
     const newContent = e.target.value;
     setContent(newContent);
-
     const newVariables = extractVariables(newContent);
     setVariables(newVariables);
-
     if (onUpdateContent) {
       onUpdateContent(id, newContent);
     }
@@ -34,13 +32,19 @@ export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
       const { scrollWidth, scrollHeight } = textareaRef.current;
       setDimensions({
         height: Math.max(150, scrollHeight + 60),
+        width: 250,
       });
     }
-
     setVariables(extractVariables(content));
   }, [content]);
 
   const { inputs = [], outputs = [] } = handles;
+
+  const calculateHandlePosition = (index, totalHandles, isVariable = false) => {
+    const nodeHeight = dimensions.height;
+    const verticalSpacing = nodeHeight / (totalHandles + 1);
+    return `${verticalSpacing * (index + 1)}px`;
+  };
 
   return (
     <div
@@ -73,21 +77,46 @@ export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
           ))}
         </div>
       </div>
+
       {inputs.map((input, index) => (
         <Handle
           key={`${id}-input-${index}`}
           type="target"
           position={Position.Left}
           id={`${id}-input-${index}`}
+          style={{
+            top: calculateHandlePosition(index, inputs.length),
+          }}
           className="w-3 h-3 rounded-full bg-blue-500 border-2 border-white shadow-md -left-1.5"
         />
       ))}
+
+      {variables.map((variable, index) => (
+        <Handle
+          key={`${id}-variable-${index}`}
+          type="target"
+          position={Position.Left}
+          id={`${id}-variable-${variable}`}
+          style={{
+            top: calculateHandlePosition(
+              index + inputs.length,
+              variables.length + inputs.length,
+              true
+            ),
+          }}
+          className="w-3 h-3 rounded-full bg-purple-500 border-2 border-white shadow-md -left-1.5"
+        />
+      ))}
+
       {outputs.map((output, index) => (
         <Handle
           key={`${id}-output-${index}`}
           type="source"
           position={Position.Right}
           id={`${id}-output-${index}`}
+          style={{
+            top: calculateHandlePosition(index, outputs.length),
+          }}
           className="w-3 h-3 rounded-full bg-green-500 border-2 border-white shadow-md -right-1.5"
         />
       ))}
