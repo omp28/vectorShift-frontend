@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 
 export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
   const [content, setContent] = useState(data.content || "");
+  const [dimensions, setDimensions] = useState({ width: 200, height: 100 });
+  const textareaRef = useRef();
 
   const handleContentChange = (e) => {
     setContent(e.target.value);
@@ -11,32 +13,34 @@ export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
     }
   };
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      const { scrollWidth, scrollHeight } = textareaRef.current;
+      setDimensions({
+        width: Math.max(200, scrollWidth + 20),
+        height: Math.max(100, scrollHeight + 20),
+      });
+    }
+  }, [content]);
+
   const { inputs = [], outputs = [] } = handles;
 
   return (
     <div
+      className="relative border border-gray-400 rounded-lg bg-gray-100 p-4"
       style={{
-        width: 200,
-        padding: "10px",
-        border: "1px solid black",
-        borderRadius: "8px",
-        backgroundColor: "#f5f5f5",
+        width: `${dimensions.width}px`,
+        height: `${dimensions.height}px`,
       }}
     >
-      <div style={{ marginBottom: "10px", fontWeight: "bold" }}>
-        {type} Node
-      </div>
+      <div className="mb-2 font-bold text-gray-700">{type} Node</div>
       <textarea
+        ref={textareaRef}
         value={content}
         onChange={handleContentChange}
         placeholder="Enter custom content"
-        style={{
-          width: "100%",
-          resize: "none",
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-          padding: "5px",
-        }}
+        className="w-full h-full resize-none border border-gray-300 rounded-md p-2 overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400"
+        style={{ boxSizing: "border-box" }}
       />
       {inputs.map((input, index) => (
         <Handle
@@ -44,7 +48,7 @@ export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
           type="target"
           position={Position.Left}
           id={`${id}-input-${index}`}
-          style={{ background: "blue" }}
+          className="bg-blue-500 w-3 h-3 rounded-full"
         />
       ))}
       {outputs.map((output, index) => (
@@ -53,7 +57,7 @@ export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
           type="source"
           position={Position.Right}
           id={`${id}-output-${index}`}
-          style={{ background: "green" }}
+          className="bg-green-500 w-3 h-3 rounded-full"
         />
       ))}
     </div>
