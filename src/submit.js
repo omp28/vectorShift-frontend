@@ -46,7 +46,7 @@ export const SubmitButton = () => {
       <button
         onClick={handleSubmit}
         disabled={isLoading}
-        className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ${
+        className={`w-full bg-[#141016] hover:bg-[#050405] text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ${
           isLoading ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
