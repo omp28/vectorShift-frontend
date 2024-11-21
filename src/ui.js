@@ -1,7 +1,3 @@
-// ui.js
-// Displays the drag-and-drop UI
-// --------------------------------------------------
-
 import { useState, useRef, useCallback } from "react";
 import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useStore } from "./store";
@@ -71,7 +67,6 @@ export const PipelineUI = () => {
         );
         const type = appData?.nodeType;
 
-        // check if the dropped element is valid
         if (typeof type === "undefined" || !type) {
           return;
         }
@@ -101,27 +96,35 @@ export const PipelineUI = () => {
   }, []);
 
   return (
-    <>
-      <div ref={reactFlowWrapper} style={{ width: "100wv", height: "70vh" }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          onInit={setReactFlowInstance}
-          nodeTypes={nodeTypes}
-          proOptions={proOptions}
-          snapGrid={[gridSize, gridSize]}
-          connectionLineType="smoothstep"
-        >
-          <Background color="#aaa" gap={gridSize} />
-          <Controls />
-          <MiniMap />
-        </ReactFlow>
-      </div>
-    </>
+    <div ref={reactFlowWrapper} className="w-full h-full bg-gray-900">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onInit={setReactFlowInstance}
+        nodeTypes={nodeTypes}
+        proOptions={proOptions}
+        snapGrid={[gridSize, gridSize]}
+        connectionLineType="smoothstep"
+        className="bg-gray-900"
+      >
+        <Background
+          variant="dots"
+          gap={gridSize}
+          size={1}
+          color="#4a5568"
+          style={{ backgroundColor: "#1a202c" }}
+        />
+        <Controls className="bg-gray-800 text-gray-200 rounded-md shadow-lg" />
+        <MiniMap
+          style={{ backgroundColor: "#2D3748" }}
+          maskColor="rgba(0, 0, 0, 0.1)"
+        />
+      </ReactFlow>
+    </div>
   );
 };

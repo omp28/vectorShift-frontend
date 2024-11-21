@@ -4,8 +4,10 @@ import { useStore } from "./store";
 export const SubmitButton = () => {
   const { collectData } = useStore();
   const [alertMessage, setAlertMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const formattedData = collectData();
     console.log("Data to be sent to the backend:", formattedData);
 
@@ -27,20 +29,21 @@ export const SubmitButton = () => {
     } catch (error) {
       console.error("Error submitting the pipeline:", error);
       alert("An error occurred while submitting the pipeline.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "20px",
-      }}
-    >
-      <button onClick={handleSubmit} style={{ padding: "10px 20px" }}>
-        Submit
+    <div className="mt-auto">
+      <button
+        onClick={handleSubmit}
+        disabled={isLoading}
+        className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ${
+          isLoading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        {isLoading ? "Submitting..." : "Submit"}
       </button>
     </div>
   );
