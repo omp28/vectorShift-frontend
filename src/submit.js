@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStore } from "./store";
 
 export const SubmitButton = () => {
@@ -25,17 +25,21 @@ export const SubmitButton = () => {
 
       const data = await response.json();
 
-      setAlertMessage(
-        `Number of Nodes: ${data.num_nodes}\nNumber of Edges: ${data.num_edges}\nIs DAG: ${data.is_dag}`
-      );
-      alert(alertMessage);
+      const message = `Number of Nodes: ${data.num_nodes}\nNumber of Edges: ${data.num_edges}\nIs DAG: ${data.is_dag}`;
+      setAlertMessage(message);
     } catch (error) {
       console.error("Error submitting the pipeline:", error);
-      alert("An error occurred while submitting the pipeline.");
+      setAlertMessage("An error occurred while submitting the pipeline.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (alertMessage) {
+      alert(alertMessage);
+    }
+  }, [alertMessage]);
 
   return (
     <div className="mt-auto">
