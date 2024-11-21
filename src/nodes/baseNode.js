@@ -16,7 +16,6 @@ const nodeStyles = {
 export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
   const [content, setContent] = useState(data.content || "");
   const [variables, setVariables] = useState([]);
-  const [dimensions, setDimensions] = useState({ width: 250, height: 150 });
   const textareaRef = useRef();
 
   const extractVariables = (text) => {
@@ -40,32 +39,26 @@ export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
   };
 
   useEffect(() => {
-    if (textareaRef.current) {
-      const { scrollWidth, scrollHeight } = textareaRef.current;
-      setDimensions({
-        height: Math.max(150, scrollHeight + 60),
-        width: 250,
-      });
-    }
     setVariables(extractVariables(content));
   }, [content]);
 
   const { inputs = [], outputs = [] } = handles;
 
   const calculateHandlePosition = (index, totalHandles, isVariable = false) => {
-    const nodeHeight = dimensions.height;
+    const nodeHeight = 150;
     const verticalSpacing = nodeHeight / (totalHandles + 1);
     return `${verticalSpacing * (index + 1)}px`;
   };
 
-  const style = nodeStyles[type] || { bg: "bg-gray-600", text: "text-white" }; // Default style if no type match
+  const style = nodeStyles[type] || { bg: "bg-gray-600", text: "text-white" };
 
   return (
     <div
       className={`relative ${style.bg} border border-gray-600 rounded-lg shadow-lg transition-shadow hover:shadow-xl`}
       style={{
-        width: `${dimensions.width}px`,
-        minHeight: `${dimensions.height}px`,
+        minWidth: "250px",
+        width: "auto",
+        minHeight: "150px",
       }}
     >
       <div className="px-4 py-2 rounded-t-lg border-b border-gray-600">
