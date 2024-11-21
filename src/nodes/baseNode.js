@@ -1,6 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 
+const nodeStyles = {
+  customInput: { bg: "bg-blue-600", text: "text-white" },
+  llm: { bg: "bg-green-600", text: "text-white" },
+  customOutput: { bg: "bg-purple-600", text: "text-white" },
+  text: { bg: "bg-yellow-600", text: "text-black" },
+  calculation: { bg: "bg-red-600", text: "text-white" },
+  logger: { bg: "bg-indigo-600", text: "text-white" },
+  condition: { bg: "bg-teal-600", text: "text-white" },
+  dataTransform: { bg: "bg-orange-600", text: "text-white" },
+  timer: { bg: "bg-gray-600", text: "text-white" },
+};
+
 export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
   const [content, setContent] = useState(data.content || "");
   const [variables, setVariables] = useState([]);
@@ -46,16 +58,18 @@ export const BaseNode = ({ id, data, type, handles = {}, onUpdateContent }) => {
     return `${verticalSpacing * (index + 1)}px`;
   };
 
+  const style = nodeStyles[type] || { bg: "bg-gray-600", text: "text-white" }; // Default style if no type match
+
   return (
     <div
-      className="relative bg-gray-700 border border-gray-600 rounded-lg shadow-lg transition-shadow hover:shadow-xl"
+      className={`relative ${style.bg} border border-gray-600 rounded-lg shadow-lg transition-shadow hover:shadow-xl`}
       style={{
         width: `${dimensions.width}px`,
         minHeight: `${dimensions.height}px`,
       }}
     >
-      <div className="bg-gray-800 px-4 py-2 rounded-t-lg border-b border-gray-600">
-        <h3 className="text-lg font-semibold text-blue-400">{type} Node</h3>
+      <div className="px-4 py-2 rounded-t-lg border-b border-gray-600">
+        <h3 className={`text-lg font-semibold ${style.text}`}>{type} Node</h3>
       </div>
       <div className="p-4">
         <textarea

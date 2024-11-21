@@ -60,7 +60,6 @@ export const useStore = create((set, get) => ({
     });
   },
 
-  // collect the data from the nodes and edges
   collectData: () => {
     const { nodes, edges } = get();
     return {
